@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "cohere-ai": "^6.2.0",
+    "dotenv": "^16.0.3"
+  }
+}
