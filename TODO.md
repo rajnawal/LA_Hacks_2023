@@ -1,5 +1,5 @@
-- Speech to text from Webcam input
-- Sentiment analysis on text for danger level
+- ~~Speech to text from Webcam input~~ DONE
+- ~~Sentiment analysis on text for danger level~~ DONE
 - OpenCV to draw contours around figures
 - Front end with live transcript and video footage
 - ~~Text message sent through API~~ DONE
