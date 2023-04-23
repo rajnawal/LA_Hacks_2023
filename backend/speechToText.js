@@ -1,0 +1,7 @@
+// function setupAudio() {
+
+// }
+
+
+
+// audioRecognition.start();
