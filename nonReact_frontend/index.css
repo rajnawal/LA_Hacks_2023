@@ -20,10 +20,6 @@
                 no-repeat;
 }
 
-.canvas {
-  transform: scaleX(-1);
-}
-
 /* prevent scrollbar from display during load */
 body.loading {
     overflow: hidden;   
@@ -58,7 +54,7 @@ body{
     font-family: 'IBM Plex Sans', sans-serif;
     text-transform: uppercase;
     max-width: 80%;
-    text-decoration: underline solid var(--red) 3px;
+    /* text-decoration: underline solid var(--red) 3px; */
 }
 .container{
     display: flex;

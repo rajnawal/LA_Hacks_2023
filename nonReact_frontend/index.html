@@ -9,8 +9,7 @@
     <nav>Duck Defense</nav>
     <section class="container">
       <div class="videoContainer">
-        <!-- <canvas id="canvas" class="video" width="400" height="300"></canvas> -->
-        <img src="https://dummyimage.com/400x300/000/fff" class="video">
+        <canvas id="canvas" class="video" width="400" height="300"></canvas>
         <span id="transcript"></span>
       </div>
       <div class="alertsInfo">
@@ -27,33 +26,13 @@
         </div>
       </div>
     </section>
+    <script src="load.js"></script>
     <script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+
     <script src="objectdetect.js"></script>
-    <!-- <script src="objectdetect.ub.js"></script> -->
     <script src="objectdetect.ff.js"></script>
-    <!-- <script src="script.js" type="text/javascript"></script> -->
-    <script>
-      const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
-      const SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
-  
-      const audioRecognition = new SpeechRecognition();
-      audioRecognition.continuous = true;
-      audioRecognition.lang = "en-US";
-      audioRecognition.interimResults = true;
-      audioRecognition.maxAlternatives = 1;
-  
-      audioRecognition.onstart = function() {
-          console.log("Microphone recording started");
-      }
-  
-      audioRecognition.onresult = function(event) {
-          var script = event.results[event.resultIndex][0].transcript;
-          // console.log(script);
-          document.getElementById("transcript").innerHTML = script;
-      }
-  
-      audioRecognition.start();
-  </script>
+    <script src="script.js" type="text/javascript"></script>
+    <script src="speechToText.js"></script>
       
   </body>
 </html>

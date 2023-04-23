@@ -12,25 +12,6 @@ var detector;
 var classifier = objectdetect.ff;
 // var mirrorImage = objectdetect.mirrorImage
 
-function onOpenCvReady() {
-    document.body.classList.remove('loading');
-
-    navigator.mediaDevices.getUserMedia({ video:true})
-    .then(stream => {
-      video.srcObject = stream;
-    })
-    .catch(error => {
-      console.error(error);
-    });
-
-  // Start processing frames from video stream
-  setInterval(() => {
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    detector = new objectdetect.detector(canvas.width, canvas.height, 1.2, classifier);
-	detectFaces(canvas);
-  }, 1000 / 30);
-}
-
 function detectFaces(canvas) {
     // Detect faces in the image:
     var rects = detector.detect(canvas);
@@ -40,7 +21,7 @@ function detectFaces(canvas) {
     // Draw rectangles around detected faces:
     for (var i = rects.length - 1; i >= 0; i--) {
         var overlap = false;
-        
+
         var coord = rects[i];
         const currx = coord[0]+coord[2]/2;
         const curry = coord[1]+coord[3]/2;
@@ -63,7 +44,7 @@ function detectFaces(canvas) {
         }
 
         prev.push([currx, curry]);
-        console.log([currx], [curry]);
+        // console.log([currx], [curry]);
 
         ctx.beginPath();
         ctx.lineWidth = '' + 2;
@@ -76,5 +57,3 @@ function detectFaces(canvas) {
 }
 
 // document.body.appendChild(video);
-
-//
