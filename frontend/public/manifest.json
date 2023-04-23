@@ -3,17 +3,17 @@
   "name": "Duck Defense",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "https://media.discordapp.net/attachments/1096177789033525349/1099478641898954832/Duck_Defense.png?width=1568&height=1138",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "https://media.discordapp.net/attachments/1096177789033525349/1099478641898954832/Duck_Defense.png?width=1568&height=1138",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "https://media.discordapp.net/attachments/1096177789033525349/1099478641898954832/Duck_Defense.png?width=1568&height=1138",
       "type": "image/png",
       "sizes": "512x512"
     }

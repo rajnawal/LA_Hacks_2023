@@ -2,42 +2,149 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <!-- <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> -->
+    <link rel="stylesheet" href="./App.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="Project for LA Hacks 2023"
     />
-    <!-- <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <title>Duck Defense</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    <nav>Duck Defense</nav>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    <section class="container">
+      <div class="videoContainer">
+        <!-- <canvas id="canvas" class="video" width="400" height="300"></canvas> -->
+        <!-- <img src="https://dummyimage.com/400x300/000/fff" class="video"/> -->
+        <span id="transcript"></span>
+      </div>
+      <div id="root"></div>
+    </section>
+    <script src="./vendor/OpenCV/objectdetect.js"></script>
+    <script src="./vendor/OpenCV/objectdetect.ff.js"></script>
+    <!-- <script src="./vendor/OpenCV/script.js" type="text/javascript"></script> -->
+    <script src="./vendor/OpenCV/opencv.js" onload="onOpenCvReady()" type="text/javascript"></script>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <script>
+    const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
+    const SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+    const audioRecognition = new SpeechRecognition();
+    audioRecognition.continuous = true;
+    audioRecognition.lang = "en-US";
+    audioRecognition.interimResults = true;
+    audioRecognition.maxAlternatives = 1;
+
+    let script = "";
+    let lastProcessedIndex = -1;
+    let lastTimestamp = Date.now();
+    let timeoutId = null;
+
+    audioRecognition.onstart = function() {
+        // console.log("Microphone recording started");
+    }
+
+    audioRecognition.onresult = function(event) {
+        const currentTimestamp = Date.now();
+        const elapsedTime = currentTimestamp - lastTimestamp;
+        lastTimestamp = currentTimestamp;
+
+        let toDisplay = event.results[event.resultIndex][0].transcript;
+        document.getElementById("transcript").innerHTML = toDisplay;
+
+        let newScript = "";
+        for (let i = lastProcessedIndex + 1; i < event.results.length; i++) {
+            const result = event.results[i];
+            const isFinal = result.isFinal;
+            const transcript = result[0].transcript;
+            if (isFinal) {
+                newScript += transcript;
+            }
+
+            if (isFinal || elapsedTime > 5000) {
+                const textToSend = newScript;
+                if (textToSend.trim().length > 0) {
+                    console.log(textToSend.slice(-5 * 1000)); // Send this text to your API using fetch or axios
+                    const p = document.getElementById("phoneNum").value
+                    fetch("http://localhost:8626/handleInput", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json"
+                      },
+                      body: JSON.stringify({ speech: textToSend.slice(-5 * 1000), p: p })
+                    })
+                      .then(response => {
+                        if (!response.ok) {
+                          throw new Error("Network response was not ok");
+                        }
+                        return response.json();
+                      })
+                      .then(data => {
+                        console.log("API response:", data);
+                        if(data.isThreat){
+                          document.getElementById("invisiblebtn").click();
+                        }
+                      })
+                      .catch(error => {
+                        console.error("Error fetching API:", error);
+                      });
+
+                }
+                script = textToSend.slice(-5 * 1000);
+                lastProcessedIndex = i;
+                newScript = "";
+                lastTimestamp = currentTimestamp;
+            }
+        }
+
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            const textToSend = script;
+            if (textToSend.trim().length > 0) {
+                console.log(textToSend); // Send this text to your API using fetch or axios
+                const p = document.getElementById("phoneNum").value
+                fetch("http://localhost:8626/handleInput", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({ speech: textToSend, p:p })
+                })
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                  })
+                  .then(data => {
+                    console.log("API response:", data);
+                    if(data.isThreat){
+                      document.getElementById("invisiblebtn").click();
+                    }
+                  })
+                  .catch(error => {
+                    console.error("Error fetching API:", error);
+                  });
+
+            }
+            script = "";
+            lastProcessedIndex = -1;
+        }, 5000 - elapsedTime);
+    }
+
+    audioRecognition.onend = function() {
+        audioRecognition.abort();
+        // console.log("Microphone recording ended");
+        audioRecognition.start();
+    }
+
+    audioRecognition.start();
+
+    </script>  
   </body>
 </html>

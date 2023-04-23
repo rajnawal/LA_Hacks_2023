@@ -75,6 +75,6 @@ function detectFaces(canvas) {
     // console.log(prev);
 }
 
-document.body.appendChild(video);
+// document.body.appendChild(video);
 
 //
