@@ -9,12 +9,19 @@
     audioRecognition.maxAlternatives = 1;
 
     audioRecognition.onstart = function() {
-        console.log("Microphone recording started");
+        // console.log("Microphone recording started");
     }
 
     audioRecognition.onresult = function(event) {
         var script = event.results[event.resultIndex][0].transcript;
         console.log(script);
+    }
+
+    audioRecognition.onend = function()
+    {
+        audioRecognition.abort();
+        // console.log("Microphone recording ended");
+        audioRecognition.start();
     }
 
     audioRecognition.start();
