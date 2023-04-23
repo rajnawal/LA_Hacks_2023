@@ -26,9 +26,34 @@
         </div>
       </div>
     </section>
+
+    <script type="text/javascript">
+        
+        window.addEventListener("load", function() {
+        
+        // create websocket instance
+          var mySocket = new WebSocket("ws://localhost:8080/ws");
+          
+          // add event listener reacting when message is received
+          mySocket.onmessage = function (event) {
+              // var output = document.getElementById("output");
+              // put text into our output div
+              console.log(event.data);
+          };
+          var form = document.getElementsByClassName("foo");
+          var input = document.getElementById("input");
+          form[0].addEventListener("submit", function (e) {
+              // on forms submission send input to our server
+              input_text = input.value;
+              mySocket.send(input_text);
+              e.preventDefault()
+          })
+        })
+
+    </script>
+
     <script src="load.js"></script>
     <script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
-
     <script src="objectdetect.js"></script>
     <script src="objectdetect.ff.js"></script>
     <script src="script.js" type="text/javascript"></script>
